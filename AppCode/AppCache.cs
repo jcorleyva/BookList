@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Web;
 
 
@@ -66,14 +67,32 @@ namespace USATodayBookList.AppCode
         private static List<string> GetGroupMembership()
         {
             List<string> groups = new List<string>();
-            foreach (System.Security.Principal.IdentityReference group in
-            System.Web.HttpContext.Current.Request.LogonUserIdentity.Groups)
-            {
-                groups.Add(group.Translate(typeof
-                (System.Security.Principal.NTAccount)).ToString());
-            }
 
-            return groups;
+			// If user's identity does not exist or the user isn't assigned to any groups, just return with empty set.
+			var userIdentity = HttpContext.Current.Request.LogonUserIdentity;
+			if (userIdentity == null || userIdentity.Groups == null)
+			{
+				return groups;
+			}
+
+			// Return set of groups user belongs to.
+			foreach (IdentityReference group in userIdentity.Groups)
+			{
+				try
+				{
+					// Only get groups that can be cast to a user or group account.  Ignore other types.
+					var ntGroup = @group.Translate(typeof (NTAccount));
+					groups.Add(ntGroup.ToString());
+				}
+				catch (Exception ex)
+				{
+					// Basically this just eats the exception since this is in a web application, but allows a debugger breakpoint to be set.
+					// This can be researched further if it's ever needed.
+					Console.WriteLine("Could not translate group: {0}", @group);
+				}
+			}
+
+	        return groups;
         }
 
     }
