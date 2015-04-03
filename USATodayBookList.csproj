@@ -27,6 +27,11 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>4.0</OldToolsVersion>
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -71,6 +76,22 @@
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="USAToday.BaseClass, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ThirdParty\USAToday.BaseClass.dll</HintPath>
+    </Reference>
+    <Reference Include="USATodayBookList, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ThirdParty\USATodayBookList.dll</HintPath>
+    </Reference>
+    <Reference Include="USATodayEntities, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ThirdParty\USATodayEntities.dll</HintPath>
+    </Reference>
+    <Reference Include="USATodayModel, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ThirdParty\USATodayModel.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="About.aspx" />
@@ -443,20 +464,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Site.Master" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\USAToday.BaseClass\USAToday.Base.csproj">
-      <Project>{EE84EA93-E150-464B-861B-A040E7035254}</Project>
-      <Name>USAToday.Base</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\USATodayEntities\USATodayEntities.csproj">
-      <Project>{AD6E6AA0-1ACE-4B84-A979-346B7A0B78B1}</Project>
-      <Name>USATodayEntities</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\USATodayModel\USATodayModel.csproj">
-      <Project>{C9DACF28-09D0-4231-BF0D-C1399C1E268D}</Project>
-      <Name>USATodayModel</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="ImportBooks\import.ashx" />

@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.Services.Protocols;
-using Microsoft.Reporting.WebForms.Internal.Soap.ReportingServices2005.Execution;
+//using Microsoft.Reporting.WebForms.Internal.Soap.ReportingServices2005.Execution;
 using System.IO;
 using System.Data;
 using System.Configuration;
@@ -95,7 +95,7 @@ namespace USATodayBookList
             string reportName = ((Button)sender).CommandArgument;
             string handlerUrl = "http://usat-vocprddb02/BookListReportPublisher/handler.ashx?ReportName=" + reportName;
             string message = GetDataViaHttp(handlerUrl);
-            divMessage.InnerHtml = (message == null || message == "") ? "Report could not be generated.<br/>Please contact your administrator." : message;            
+            //divMessage.InnerHtml = (message == null || message == "") ? "Report could not be generated.<br/>Please contact your administrator." : message;            
         }
 
         protected void ReportsGridView_RowDataBound(object sender, GridViewRowEventArgs e)
