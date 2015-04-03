@@ -1,0 +1,186 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Import Books Lists Agent</title>
+    <style type="text/css">
+        table {overflow-x: scroll; white-space: nowrap; border-collapse: collapse; }
+        table, td {border-color:#CCFFFF; border-width: 2px; border-style: solid}
+        .error td {color: Red}
+        input[type=button] {
+            color:#333333;
+        }
+        em input[type=button] {color:black;font-weight:bolder;}
+    </style>
+</head>
+<body>
+<p id="Mondays" style="height: 140px">Checking database...</p>
+    <p>
+        <div id="Status" style="height: 20px">
+        </div>
+    </p>
+ <!-- 
+<p>Step 1: ...</p>
+<p>Step 2: ...</p>
+<form action="">
+<p>Step 3: <input type="button" value="Validate" id="CmdValidate" onclick="doValidate()" /><br /></p>
+-->
+<p>Step 4: <input type="button" value="Import" id="CmdImport" onclick="doImport()" disabled="disabled" /><br />
+<input type="button" value="Delete Week" id="CmdDelete" onclick="doDelete()" disabled="disabled" /></p>
+</form>
+<p><div id="ErrorLog" class="error"></div></p>
+<p><div id="ImportLog"></div></p>
+<p><div id="Providers"></div></p>
+</body>
+</html>
+<script type="text/javascript">
+    function $(id) {
+        return document.getElementById(id);
+    }
+    function setStatus(txt) {
+        $('Status').innerHTML=txt;
+    }
+    function noCache() {
+        return 'cachedefeat='+new Date().getTime();
+    }
+    function doServer(cmd, succeed, fail) {
+        var img=new Image();
+        img.setAttribute('width', 1);
+        img.setAttribute('height', 1);
+        img.addEventListener('load', succeed);
+        img.addEventListener('abort', fail);
+        img.addEventListener('error', fail);
+        img.setAttribute('src', cmd+noCache());
+        document.getElementsByTagName('head')[0].appendChild(img);
+    }
+    function getServer(cmd) {
+        var script=document.createElement('script');
+        script.setAttribute('src', cmd+noCache());
+        script.setAttribute('type', 'text/javascript');
+        document.getElementsByTagName('head')[0].appendChild(script);
+    }
+    function enableButton(btn, on) {
+        if (on) {
+            $(btn).removeAttribute('disabled');
+        } else {
+            $(btn).setAttribute('disabled', 'disabled');
+        }
+    }
+    function setMondays(obj) {
+        if (!obj||!obj.mondays) alert('server error: server hates mondays');
+        var M=obj.mondays;
+        var t=['Please select date to process: <br /><ul>\n'];
+        for (var j=0; j<M.length; j++) {
+            var label=M[j].MonDayYear;
+            var date=M[j].isodate;
+            var current=M[j].ThisWeek;
+            if (current) t.push('<em>');
+            t.push('<input type="button" value="');
+            t.push(label)
+            t.push('" onClick="mondayIs(\'')
+            t.push(date)
+            t.push('\', \'');
+            t.push(label);
+            t.push('\')">');
+            if (current) t.push('</em>');
+            t.push('<br />\n');
+        }
+        t.push('</ul>');
+        $('Mondays').innerHTML=t.join('');
+    }
+    validateStatus='Something has gone wrong -- you should never see this message...';
+    function mondayIs(dt, lbl) {
+        self.WeekStart=dt;
+        $('Mondays').innerHTML='';
+        validateStatus='Validating input files for '+lbl+'...';
+        setStatus(validateStatus);
+        doServer('setcurrentweek.ashx?monday='+dt+'&', doneValidate, failValidate);
+    }
+    /*
+    function doValidate() {
+        enableButton('CmdImport',false);
+        setStatus('Validating...');
+        doServer('validate.ashx?', doneValidate, failValidate);
+    }
+    */
+    function doneValidate() {
+        setStatus(validateStatus+'done');
+        // getServer('providers.ashx?callback=showProviders&');
+        getServer('importlog.ashx?callback=showImportLog&');
+        // enableButton('CmdValidate', false);
+        enableButton('CmdImport', true);
+        enableButton('CmdDelete', true);
+    }
+    function failValidate() {
+        setStatus(validateStatus+'failed');
+    }
+    /*
+    function showProviders(obj) {
+        if (!obj.providers) {
+            alert("invalid server response: no providers");
+            return;
+        }
+        $('Providers').innerHTML=showTable(obj.providers, 'Provider File Rows'.split(' '), 'ProviderName CurrentImportFile RowsImported'.split(' '));
+    }
+    */
+    function showTable(tbl, hdrs, cols) {
+        var t=['<table><tr><td>', hdrs.join('</td><td>')];
+        for (var j=0; j<tbl.length; j++) {
+            t.push('</td></tr><tr><td>');
+            var r=[], row= tbl[j];
+            for (var k=0; k<cols.length; k++)
+                r.push(row[cols[k]]);
+            t.push(r.join('</td><td>'));
+        }
+        t.push('</td></tr></table>');
+        return t.join('');
+    }
+    var _keepMonitoring=false;
+    function doImport() {
+        enableButton('CmdImport', false);
+        enableButton('CmdDelete', false);
+        setStatus('Importing...');
+        doServer('import.ashx?', doneImport, failImport);
+        monitorImport(true);
+    }
+    function doneImport() {
+        setStatus('Importing...done');
+        monitorImport(false);
+    }
+    function failImport() {
+        setStatus('Importing...failed');
+        clearInterval(_importMonitor);
+        monitorImport(false);
+    }
+    function monitorImport(more) {
+        if (arguments.length)
+            _keepMonitoring=more;
+        getServer('importlog.ashx?callback=showImportLog&');
+        if (_keepMonitoring)
+            setTimeout("monitorImport()", 1000);
+    }
+    function showImportLog(obj) {
+        if (!obj.importLog) {
+            alert("invalid server response: no providers");
+            return;
+        }
+        $('ImportLog').innerHTML=showTable(obj.importLog, 'Provider File Rows'.split(' '), 'ProviderName CurrentImportFile RowsImported'.split(' '));
+        /* if (obj.importErrorLog && obj.importErrorLog.length)
+            $('ErrorLog').innerHTML=showTable(obj.importErrorLog, 'Id ErrorDate ProviderName ErrorText'.split(' '), 'Id ErrorDate ProviderName ErrorText'.split(' '));
+            */
+    }
+    function doDelete() {
+        if (confirm('Are you sure you want to delete everything that has been imported for this week ('+self.WeekStart+')?')) {
+            setStatus('Deleting...');
+            enableButton('CmdImport', false);
+            enableButton('CmdDelete', false);
+            doServer('delete.ashx?areyousure=1&week='+dt, doneDelete, failDelete);
+        }
+    }
+    function doneDelete() {
+        setStatus('Deleting...done');
+    }
+    function failDelete() {
+        setStatus('Deleting...failed');
+    }
+</script>
+<script type="text/javascript" src="Mondays.ashx?callback=setMondays"></script>

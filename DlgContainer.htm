@@ -1,0 +1,32 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+	<title>BookList Dialog</title>
+	<script type="text/javascript" language="javascript">
+	<!--
+	function WindowOnLoad()
+	{
+		try
+		{
+			if(typeof(dialogArguments) == 'undefined' || dialogArguments == null)
+			{
+				return;
+			}
+			window.opener = dialogArguments.Opener;
+			var frm = window.frames["winDialog"];
+			frm.opener = dialogArguments.Opener;
+			frm.location.href = dialogArguments.URL;
+			document.title = frm.document.title;
+		}
+		catch(ex)
+		{
+			alert(ex.description);
+		}
+	}	
+	//-->
+	</script>
+</head>
+<body onload="javascript: WindowOnLoad();" scroll="no" style="margin:0;">
+    <iframe id="winDialog" name="winDialog" src="" height="100%" width="100%" scrolling="auto"></iframe>
+</body>
+</html>

@@ -1,0 +1,6 @@
+obj/*
+Backup/*
+bin/*
+*.user
+*.suo
+*~
