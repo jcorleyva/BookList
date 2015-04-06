@@ -113,6 +113,7 @@
     <Content Include="ChannelType.aspx" />
     <Content Include="ChannelTypeList.aspx" />
     <Content Include="ConfirmImport.aspx" />
+    <Content Include="Controls\LinkableTextBox.ascx" />
     <Content Include="DlgContainer.htm" />
     <Content Include="ImportBooks\Agent.htm" />
     <Content Include="ImportBooks\favicon.ico" />
@@ -263,6 +264,12 @@
     </Compile>
     <Compile Include="ConfirmImport.aspx.designer.cs">
       <DependentUpon>ConfirmImport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\LinkableTextBox.ascx.cs">
+      <DependentUpon>LinkableTextBox.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\LinkableTextBox.ascx.designer.cs">
+      <DependentUpon>LinkableTextBox.ascx</DependentUpon>
     </Compile>
     <Compile Include="ImportBooks\BooksDataAccessLayer.cs" />
     <Compile Include="ImportBooks\ClearGif.cs" />
