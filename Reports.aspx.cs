@@ -28,42 +28,42 @@ namespace USATodayBookList
                 dt.Columns.Add("ButtonText");
                 DataRow dr = dt.NewRow();
                 dr["ReportDisplayName"] = "Snapshot Top 5";
-                dr["ReportUrl"] = "http://usat-vocprddb02/Reports/Pages/Report.aspx?ItemPath=%2fUSATodayBookList%2fSnapShot";
+                dr["ReportUrl"] = "http://usat-vocprddb08/Reports/Pages/Report.aspx?ItemPath=%2fUSATodayBookList%2fSnapShot";
                 dr["ReportName"] = "SnapShot";
                 dr["ButtonText"] = "Send to NewsGate Wire";
                 dt.Rows.Add(dr);
 
                 dr = dt.NewRow();
                 dr["ReportDisplayName"] = "Top 50";
-                dr["ReportUrl"] = "http://usat-vocprddb02/Reports/Pages/Report.aspx?ItemPath=%2fUSATodayBookList%2fTop50";
+                dr["ReportUrl"] = "http://usat-vocprddb08/Reports/Pages/Report.aspx?ItemPath=%2fUSATodayBookList%2fTop50";
                 dr["ReportName"] = "Top50";
                 dr["ButtonText"] = "Send to Gannett NS/NewsGate Wire";
                 dt.Rows.Add(dr);
 
                 dr = dt.NewRow();
                 dr["ReportDisplayName"] = "BizBooks";
-                dr["ReportUrl"] = "http://usat-vocprddb02/Reports/Pages/Report.aspx?ItemPath=%2fUSATodayBookList%2fBizBooks";
+                dr["ReportUrl"] = "http://usat-vocprddb08/Reports/Pages/Report.aspx?ItemPath=%2fUSATodayBookList%2fBizBooks";
                 dr["ReportName"] = "BizBooks";
                 dr["ButtonText"] = "Send to Finger Post";
                 dt.Rows.Add(dr);
 
                 dr = dt.NewRow();
                 dr["ReportDisplayName"] = "Top 150";
-                dr["ReportUrl"] = "http://usat-vocprddb02/Reports/Pages/Report.aspx?ItemPath=%2fUSATodayBookList%2fTop150";
+                dr["ReportUrl"] = "http://usat-vocprddb08/Reports/Pages/Report.aspx?ItemPath=%2fUSATodayBookList%2fTop150";
                 dr["ReportName"] = "Top150";
                 dr["ButtonText"] = "";
                 dt.Rows.Add(dr);
 
                 dr = dt.NewRow();
                 dr["ReportDisplayName"] = "Top 150 Buzz";
-                dr["ReportUrl"] = "http://usat-vocprddb02/Reports/Pages/Report.aspx?ItemPath=%2fUSATodayBookList%2fTop150Buzz";
+                dr["ReportUrl"] = "http://usat-vocprddb08/Reports/Pages/Report.aspx?ItemPath=%2fUSATodayBookList%2fTop150Buzz";
                 dr["ReportName"] = "Top150Buzz";
                 dr["ButtonText"] = "";
                 dt.Rows.Add(dr);
 
                 dr = dt.NewRow();
                 dr["ReportDisplayName"] = "New This Week";
-                dr["ReportUrl"] = "http://usat-vocprddb02/Reports/Pages/Report.aspx?ItemPath=%2fUSATodayBookList%2fNewThisWeek";
+                dr["ReportUrl"] = "http://usat-vocprddb08/Reports/Pages/Report.aspx?ItemPath=%2fUSATodayBookList%2fNewThisWeek";
                 dr["ReportName"] = "NewThisWeek";
                 dr["ButtonText"] = "";
                 dt.Rows.Add(dr);
@@ -93,7 +93,7 @@ namespace USATodayBookList
         protected void btnPublish_Click(object sender, EventArgs e)
         {
             string reportName = ((Button)sender).CommandArgument;
-            string handlerUrl = "http://usat-vocprddb02/BookListReportPublisher/handler.ashx?ReportName=" + reportName;
+            string handlerUrl = "http://localhost/BookListReportPublisher/handler.ashx?ReportName=" + reportName;
             string message = GetDataViaHttp(handlerUrl);
             //divMessage.InnerHtml = (message == null || message == "") ? "Report could not be generated.<br/>Please contact your administrator." : message;            
         }
