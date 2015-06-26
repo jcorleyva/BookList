@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Web.Services.Protocols;
 //using Microsoft.Reporting.WebForms.Internal.Soap.ReportingServices2005.Execution;
-using System.IO;
 using System.Data;
-using System.Configuration;
 using System.Net;
 using System.Text;
-using System.Web.UI.HtmlControls;
 
 namespace USATodayBookList
 {
@@ -102,8 +94,8 @@ namespace USATodayBookList
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                if (((System.Data.DataRowView)e.Row.DataItem).Row["ButtonText"].ToString() != "")
-                    ((Button)e.Row.Cells[1].Controls[1]).Visible = true;
+                if (((DataRowView)e.Row.DataItem).Row["ButtonText"].ToString() != "")
+                    (e.Row.Cells[1].Controls[1]).Visible = true;
                 else
                     e.Row.Cells[1].Controls.Clear();
             }
