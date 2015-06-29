@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Configuration;
+using System.IO;
 using System.Web.UI.WebControls;
 //using Microsoft.Reporting.WebForms.Internal.Soap.ReportingServices2005.Execution;
 using System.Data;
 using System.Net;
 using System.Text;
+using USATodayBookList.ReportingService;
 
 namespace USATodayBookList
 {
@@ -66,29 +69,100 @@ namespace USATodayBookList
             }
         }
 
-        private static string GetDataViaHttp(string Url)
-        {
-            try
-            {
-                using (WebClient client = new WebClient())
-                {
-                    client.Encoding = Encoding.UTF8;
-                    return client.DownloadString(Url);
-                }
-            }
-            catch
-            {
-                return null;
-            }
-        }
+		protected void btnPublish_Click(object sender, EventArgs e)
+		{
+			var message = "";
 
-        protected void btnPublish_Click(object sender, EventArgs e)
-        {
-            string reportName = ((Button)sender).CommandArgument;
-            string handlerUrl = "http://localhost/BookListReportPublisher/handler.ashx?ReportName=" + reportName;
-            string message = GetDataViaHttp(handlerUrl);
-            //divMessage.InnerHtml = (message == null || message == "") ? "Report could not be generated.<br/>Please contact your administrator." : message;            
-        }
+			try
+			{
+				var reportName = ((Button)sender).CommandArgument;
+				var rs = new ReportExecutionService
+				{
+					Credentials = CredentialCache.DefaultNetworkCredentials
+				};
+
+				// Render arguments
+				string historyID = null;
+				const string devInfo = @"<DeviceInfo><Toolbar>False</Toolbar></DeviceInfo>";
+				string reportPath = "/USATodayBookList/" + reportName;
+				string format = ConfigurationManager.AppSettings["ReportFileFormat"];
+				if (reportName == "Top150")
+				{
+					format = ConfigurationManager.AppSettings["Top150ReportFileFormat"];
+				}
+
+				var execInfo = new ExecutionInfo();
+				var execHeader = new ExecutionHeader();
+
+				rs.ExecutionHeaderValue = execHeader;
+				rs.LoadReport(reportPath, historyID);
+
+				string extension;
+				string encoding;
+				string mimeType;
+				Warning[] warnings;
+				string[] streamIDs;
+				byte[] result = rs.Render(format, devInfo, out extension, out encoding, out mimeType, out warnings, out streamIDs);
+
+				// JMC - Bytes mentioned in original comment below are a byte order mark for a UTF8 document.
+				// Reporting services is putting three junk bytes at the beginning 239,187,191 (Don't know where it is coming from)
+				// I'm utilizing them to store needed characters
+				if (result[0] == 239 && result[1] == 187 && result[2] == 191)
+				{
+					result[0] = 126; // ~
+					result[1] = 13;  // carriage return
+					result[2] = 10; // newline feed
+				}
+
+				Byte[] copyResult = new Byte[result.Length];
+				int bytesToRemove = 0;
+				int j = 0;
+
+				// Reporting Services encapsulates strings with double quotes with a double quote as 
+				// a qualifier. We remove these extra double quotes here.
+				for (int i = 0; i < result.Length; i++)
+				{
+					if (result[i] != 34 || (result[i] == 34 && result[i + 1] == 34))
+					{
+						copyResult[j] = result[i];
+						j++;
+					}
+					else
+						bytesToRemove++;
+				}
+				Array.Resize(ref copyResult, copyResult.Length - bytesToRemove);
+
+				int publishCount = 1;
+				if (reportName == "Top50")
+					publishCount = 2;
+
+				for (int i = 1; i <= publishCount; i++)
+				{
+					reportName = (i == 2 && reportName == "Top50") ? "GNStop50" : reportName;
+					string publishDir = ConfigurationManager.AppSettings["ReportPublishingPath"];
+					string publishPath = publishDir + reportName + "_" + DateTime.Now.ToString("MMddyy") + "." + format.ToLower();
+					var fileHeader = Encoding.ASCII.GetBytes("~" + Environment.NewLine + "DU:" + reportName + Environment.NewLine);
+
+					if (!Directory.Exists(publishDir))
+					{
+						Directory.CreateDirectory(publishDir);
+					}
+
+					FileStream stream = File.Create(publishPath, copyResult.Length);
+					stream.Write(fileHeader, 0, fileHeader.Length);
+					stream.Write(copyResult, 0, copyResult.Length);
+					stream.Close();
+
+					message = message + "Report " + reportName + " published successfully.<br/>";
+				}
+			}
+			// ReSharper disable once EmptyGeneralCatchClause
+			catch //(Exception ex)
+			{
+				//Logger.WriteExceptionEntry(ex);
+				//message = "There was an error in publishing this report." + ex.Message;
+			}
+		}
 
         protected void ReportsGridView_RowDataBound(object sender, GridViewRowEventArgs e)
         {
