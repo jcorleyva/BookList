@@ -1,17 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Web.Services.Protocols;
-using Microsoft.Reporting.WebForms.Internal.Soap.ReportingServices2005.Execution;
-using System.IO;
-using System.Data;
-using System.Configuration;
-using System.Net;
 using USATodayBookList.AppCode;
-using System.Threading;
 
 namespace USATodayBookList
 {

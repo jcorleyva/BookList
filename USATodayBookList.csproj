@@ -119,6 +119,7 @@
     <Content Include="ImportBooks\favicon.ico" />
     <Content Include="ImportBooks\README-Import.txt" />
     <Content Include="NoAccess.htm" />
+    <Content Include="ResetWorkflow.aspx" />
     <Content Include="Scripts\CommonApp.js" />
     <Content Include="SQLServer.sql" />
     <Content Include="SystemAttributeList.aspx" />
@@ -297,6 +298,13 @@
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="ResetWorkflow.aspx.cs">
+      <DependentUpon>ResetWorkflow.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ResetWorkflow.aspx.designer.cs">
+      <DependentUpon>ResetWorkflow.aspx</DependentUpon>
     </Compile>
     <Compile Include="SystemAttributeList.aspx.cs">
       <DependentUpon>SystemAttributeList.aspx</DependentUpon>
