@@ -67,7 +67,7 @@ namespace USATodayBookList
 
 		private static string GetDataViaHttp(string Url)
 		{
-			try
+			//try
 			{
 				using (var client = new WebClient())
 				{
@@ -75,7 +75,7 @@ namespace USATodayBookList
 					return client.DownloadString(Url);
 				}
 			}
-			catch
+			//catch
 			{
 				return null;
 			}
