@@ -44,7 +44,7 @@ namespace USATodayBookList
             try
             {
                 USATodayBookList.AppCode.DABooklist da = new AppCode.DABooklist();
-                da.Archive();
+                //da.Archive();
             }
             catch (Exception ex)
             {
