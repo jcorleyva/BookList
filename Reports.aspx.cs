@@ -155,10 +155,11 @@ namespace USATodayBookList
 				}
 			}
 			// ReSharper disable once EmptyGeneralCatchClause
-			catch //(Exception ex)
+			catch (Exception ex)
 			{
 				//Logger.WriteExceptionEntry(ex);
 				//message = "There was an error in publishing this report." + ex.Message;
+				throw;
 			}
 		}
 
