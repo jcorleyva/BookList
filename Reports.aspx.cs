@@ -82,7 +82,6 @@ namespace USATodayBookList
 				};
 
 				// Render arguments
-				string historyID = null;
 				const string devInfo = @"<DeviceInfo><Toolbar>False</Toolbar></DeviceInfo>";
 				string reportPath = "/USATodayBookList/" + reportName;
 				string format = ConfigurationManager.AppSettings["ReportFileFormat"];
@@ -91,11 +90,10 @@ namespace USATodayBookList
 					format = ConfigurationManager.AppSettings["Top150ReportFileFormat"];
 				}
 
-				var execInfo = new ExecutionInfo();
 				var execHeader = new ExecutionHeader();
 
 				rs.ExecutionHeaderValue = execHeader;
-				rs.LoadReport(reportPath, historyID);
+				rs.LoadReport(reportPath, null);
 
 				string extension;
 				string encoding;
