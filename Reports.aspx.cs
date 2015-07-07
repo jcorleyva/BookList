@@ -84,7 +84,7 @@ namespace USATodayBookList
 		protected void btnPublish_Click(object sender, EventArgs e)
 		{
 			string reportName = ((Button)sender).CommandArgument;
-			string handlerUrl = "http://localhost/BookListReportPublisher/handler.ashx?ReportName=" + reportName;
+			string handlerUrl = "http://usat-vocprddb08/BookListReportPublisher/handler.ashx?ReportName=" + reportName;
 			string message = GetDataViaHttp(handlerUrl);
 			//divMessage.InnerHtml = (message == null || message == "") ? "Report could not be generated.<br/>Please contact your administrator." : message;
 		}
